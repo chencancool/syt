@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}收银系统{% endblock %}
+
+{% block body %}
+<div class="row">
+    {% for product in products %}
+    <div class="col-sm-6 col-md-4 product">
+        <div class="thumbnail">
+            <a href="{{ product.url }}" target="_blank">
+                <img src="{{ product.img_url }}" alt="商品">
+                <div class="caption">
+                    <p class="product__price">{{ product.price }}</p>
+                    <h4 class="product__name">{{ product.name }}</h4>
+                </div>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

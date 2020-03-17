@@ -1,0 +1,24 @@
+.form,
+.form-horizontal{
+	width: 400px;
+	margin: 0 auto;
+}
+
+a,
+a:hover,
+a:visited {
+  text-decoration: none !important;
+}
+
+.product__name,
+.product__description {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% from "macros.html" import render_pagination %}
+
+{% block title %}订单主页{% endblock %}
+
+{% block body %}
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>sn</th>
+        <th>client_sn</th>
+        <th>order_status</th>
+        <th>payer_uid</th>
+        <th>subject</th>
+        <th>total_amount</th>
+        <th>操作</th>
+    </tr>
+    <tbody>
+    {% for order in pagination.items %}
+    <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.sn }}</td>
+        <td>{{ order.client_sn }}</td>
+        <td>{{ order.order_status }}</td>
+        <td>{{ order.payer_uid }}</td>
+        <td>{{ order.subject }}</td>
+        <td>{{ order.amount/100 }}元</td>
+        <td>
+            <!-- 使用了俩个 Bootstrap 的 icon 代表编辑和删除操作 -->
+            <div class="btn-group" role="group">
+                <a href="{{ url_for('order.refund', sn=order.sn) }}" type="button" class="btn btn-default" title＝"退款">
+                    <span class="glyphicon glyphicon-yen" title＝"退款" aria-hidden="true">
+                    {% if order.status %}
+                    退款
+                    {% else %}
+                    已退款
+                    {% endif %}
+                    </span>
+                </a>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    </thead>
+</table>
+
+<!-- 使用 macro 渲染分页 -->
+{{ render_pagination(pagination, 'order.index') }}
+{% endblock%}

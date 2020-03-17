@@ -1,0 +1,51 @@
+{% extends "admin/index.html" %}
+{% from "macros.html" import render_pagination %}
+
+{% block title %}
+Admin - products
+{% endblock %}
+
+{% block operation %}
+<a href="{{ url_for('admin.create_product') }}" type="button" class="btn btn-primary">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+    添加商品
+</a>
+{% endblock %}
+
+{% block admin %}
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>商品条码</th>
+        <th>商品名</th>
+        <th>价格</th>
+        <th>操作</th>
+    </tr>
+    <tbody>
+    {% for product in pagination.items %}
+    <tr>
+        <td>{{ product.id }}</td>
+        <td>{{ product.barcode }}</td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.price }}</td>
+        <td>
+            <!-- 使用了俩个 Bootstrap 的 icon 代表编辑和删除操作 -->
+            <div class="btn-group" role="group">
+                <a href="{{ url_for('admin.edit_product', product_id=product.id) }}" type="button" class="btn btn-default" title＝"编辑">
+                <span class="glyphicon glyphicon-pencil" title＝"编辑" aria-hidden="true"></span>
+                </a>
+                <a href="{{ url_for('admin.delete_product', product_id=product.id) }}" type="button" class="btn btn-default" title＝"删除">
+                <span class="glyphicon glyphicon-trash" title＝"删除" aria-hidden="true"></span>
+                </a>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    </thead>
+</table>
+
+<!-- 使用 macro 渲染分页 -->
+{{ render_pagination(pagination, 'admin.products') }}
+{% endblock %}

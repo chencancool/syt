@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}收银台{% endblock %}
+
+{% block body %}
+<form>
+<table class="table table-hover" id="product">
+    <thead>
+    <tr>
+        <th>商品条码</th>
+        <th>商品名称</th>
+        <th>单价</th>
+        <th>数量</th>
+        <th>小计</th>
+        <th>删除</th>
+    </tr>
+    </thead>
+</table>
+ <div id="dg" style="z-index: 9999; position: fixed ! important; right: 20%; bottom: 7em;">
+     <div width="100%" style="position: absolute; width:300px; right: 0px; top: 0px;">
+         <button id="toltal_amount" type="button" class="btn btn-primary btn-lg btn-block" style="width:100%;font-size:40px;">
+             <span>收款：￥</span><span id="amount" name="amount">0.00</span><span>元</span>
+         </button>
+     </div>
+</div>
+</form>
+{% endblock %}
+
+{% block footer %}
+<form>
+<div class="row">
+    <div class="col-md-8" style="margin-bottom:10px;line-height:2em">
+        <input id="barcode" placeholder="条码/品名" name="barcode"/>
+        <button type="button" id="btn" class="btn btn-primary">确认</button>
+    </div>
+</div>
+</form>
+<div class="row">
+    <div class="col-md-8" style="margin-bottom:20px;line-height:2em">
+        <input id="prouduct_price" placeholder="输入价格无码收银"/>
+        <button type="button" class="btn btn-primary">确认</button>
+    </div>
+</div>
+
+<!--<div id="dg" style="z-index: 9999; position: fixed ! important; right: 20%; bottom: 3%;">-->
+    <!--<table width="100%" style="position: absolute; width:260px; right: 0px; top: 0px;">-->
+        <!--<button id="toltal_amount" type="button" class="btn btn-primary btn-lg btn-block" style="width:100%;font-size:40px;">-->
+            <!--<span>收款：￥</span><span id="amount" name="amount">0.00</span><span>元</span>-->
+        <!--</button>-->
+    <!--</table>-->
+<!--</div>-->
+{% endblock %}
+
+{% block scripts %}
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript">
+function post(url, params) {
+    // 创建form元素
+    var temp_form = document.createElement("form");
+    // 设置form属性
+    temp_form.action = url;
+    temp_form.target = "_self";
+    temp_form.method = "post";
+    temp_form.style.display = "none";
+    // 处理需要传递的参数
+    for (var x in params) {
+        var opt = document.createElement("input");
+        opt.name = x;
+        opt.value = params[x];
+        temp_form.appendChild(opt);
+    }
+    document.body.appendChild(temp_form);
+    // 提交表单
+    temp_form.submit();
+}
+
+$(function() {
+    // body...
+    $("#toltal_amount").click(function(){
+        var amount = $('#amount').text();
+        $.ajax({
+            url: "{{ url_for('checkout.convert') }}",
+            type: "post",
+            data: {'amount': amount},
+            dataType: "json",
+            success: function (data) {
+                if (data.success || data.success == true || data.success == "true") {
+                    var url = "{{ url_for('checkout.cashier') }}";//需要请求后台跳转页面的链接
+                    var params ={"amount" : data.amount};
+                    post(url,params);
+                }else {
+                    layer.msg('生成失败');
+                }
+            },
+            error: function (e) {
+                alert(e);
+            }
+        });
+    })
+})
+
+
+$(function(){
+    var price1 = parseFloat($('#price').text());
+	var t = $('#goodscount');   /* 数量显示框 */
+	$('#plus').click(function(){
+		t.val(parseInt(t.val())+1);
+		var num = t.val()
+        var total = num * price1;
+        $('#price').text(total);
+	})
+	$('#minus').click(function(){
+	    if(t.val()<=1){
+	        t.val(1)
+	    }else{
+            t.val(parseFloat(t.val())-1);
+            var num = t.val()
+	        var total = num * price1;
+	        $('#price').text(total);
+		}
+	})
+});
+
+
+
+// 数量增加
+function plus(obj){
+    var row = obj.parentNode.parentNode;
+    var price1 = parseFloat(row.cells[2].children[0].innerHTML); //var price1 = parseFloat($('#price').text());
+    var t = row.cells[3].children[0];       //var t = $('#goodscount');   /* 数量显示框 */
+    t.value = parseInt(t.value) + 1;        //t.val(parseInt(t.val())+1);
+    var num = t.value
+    var total = num * price1;
+    var sum = row.cells[4].children[0];
+    sum.innerHTML = total.toFixed(2);
+
+    var row = $("#product tr");
+    var amount = $("#amount");
+    var amount_1 = 0;
+    row.each(function(i){
+        $(this).children('td').each(function(j){
+            if(j==4){
+            amount_1 += Number(parseFloat($(this).text()));
+            }
+        })
+    })
+    amount.text(amount_1);
+}
+
+// 数量减少
+function minus(obj){
+    var row = obj.parentNode.parentNode;
+    var price1 = parseFloat(row.cells[2].children[0].innerHTML); //var price1 = parseFloat($('#price').text());
+    var t = row.cells[3].children[0];   //var t = $('#goodscount');   /* 数量显示框 */
+    if(t.value<=1){
+        t.value=1
+    }else{
+        t.value = parseInt(t.value)-1;
+        var num = t.value
+        var total = num * price1;
+        var sum = row.cells[4].children[0];
+        sum.innerHTML = total.toFixed(2);   //$('#sum').text(total.toFixed(2));
+
+        var row = $("#product tr");
+        var amount = $("#amount");
+        var amount_1 = 0;
+        row.each(function(i){
+            $(this).children('td').each(function(j){
+                if(j==4){
+                amount_1 += Number(parseFloat($(this).text()));
+                }
+            })
+        })
+        amount.text(amount_1);
+    }
+}
+
+
+var tableHtml = "";
+var tableBarcode = "";
+var tableName = "";
+var tablePrice = "";
+var tableTotal = "";
+
+tableBarcode += '<tr>'
+    +'<td>'
+tableName += '</td>'
+    +'<td>'
+tablePrice += '</td>'
+    +'<td><em id="price">'
+tableTotal += '</em>元</td>'
+    +'<td>'
+    +'<input id="goodscount" name="num" style="width: 25px;" value="1"/>'
+    +'<button id="plus" onclick="plus(this)">+</button>'
+    +'<button id="minus" onclick="minus(this)">-</button>'
+    +'</td>'
+    +'<td class="total"><em id="sum">'
+tableHtml += '</em>元</td>'
+    +'<td>'
+    +'<a href="javascript:;" onclick="removeLine(this)" type="button" class="btn btn-default" title="删除">'
+    +'<span class="glyphicon glyphicon-trash" title="删除" aria-hidden="true"></span>'
+    +'</a>'
+    +'</td>'
+    +'</tr>';
+
+
+// 创建删除函数
+function removeLine(obj){
+    var table=obj.parentNode.parentNode.parentNode;
+    table.removeChild(obj.parentNode.parentNode);
+
+
+    var row = $("#product tr");
+    var amount = $("#amount");
+    var amount_1 = 0;
+    row.each(function(i){
+        $(this).children('td').each(function(j){
+            if(j==4){
+            amount_1 += Number(parseInt($(this).text()));
+            }
+        })
+    })
+    amount.text(amount_1)
+}
+
+
+$(function() {
+    // body...
+    $("#btn").click(function(){
+    $.ajax({
+        url: "{{ url_for('checkout.product_get') }}",
+        type: "POST",
+        data: {'barcode': $('#barcode').val()},
+        dataType: "json",
+        success: function (data) {
+            // alert(data.name + ":" + data.age);
+            if(data!=""){
+                $("#product").append(tableBarcode+data.barcode+tableName+data.name+tablePrice+data.price+tableTotal+data.price+tableHtml)
+                var amount = $("#amount");
+                var row = $("#product tr");
+                var sum = 0.00;
+                row.each(function(i){
+                    $(this).children('td').each(function(j){
+                        if(j==4){
+                            sum += Number(parseFloat($(this).text()));
+                            amount.text(sum);
+                        }
+                    })
+                })
+            }
+        }
+    })
+    })
+})
+</script>
+{% endblock %}

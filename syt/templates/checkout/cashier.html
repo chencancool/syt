@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}收银台{% endblock %}
+
+{% block body %}
+<form class="form-horizontal" id="form">
+    <div class="form-group">
+        <label class="col-sm-3 control-label">总额: ￥</label>
+        <div class="col-sm-9">
+            <input type="text" id="amount" class="form-control" value="{{ amount }}">
+        </div>
+    </div>
+   <div class="form-group">
+        <label class="col-sm-3 control-label">收款: ￥</label>
+        <div class="col-sm-9">
+            <input type="text" id="total" class="form-control" placeholder="收款">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">找零: ￥</label>
+        <div class="col-sm-9">
+            <input type="text" id="change" class="form-control" placeholder="找零">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-9">
+            <button type="button" class="btn btn-danger btn-lg" style="margin-right:20px" id="cash">现金</button>
+            <button type="button" class="btn btn-danger btn-lg" id="btn">收钱吧</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+function post(url, params) {
+    // 创建form元素
+    var temp_form = document.createElement("form");
+    // 设置form属性
+    temp_form.action = url;
+    temp_form.target = "_self";
+    temp_form.method = "post";
+    temp_form.style.display = "none";
+    // 处理需要传递的参数
+    for (var x in params) {
+        var opt = document.createElement("input");
+        opt.name = x;
+        opt.value = params[x];
+        temp_form.appendChild(opt);
+    }
+    document.body.appendChild(temp_form);
+    // 提交表单
+    temp_form.submit();
+}
+
+
+$(function(){
+	$('#total').bind('input propertychange', function() {
+		var a = $('#amount').val();
+		var b = $('#total').val();
+		var sum= b - a;
+
+	    $('#change').val(sum);
+	});
+
+})
+
+$(function(){
+    $('#btn').click(function(){
+        var amount = parseFloat($('#amount').val())*100
+        var dynamic_id=prompt("请扫描或输入付款码：");
+        if(dynamic_id)
+        {
+            $.ajax({
+                url: "{{ url_for('checkout.pay') }}",
+                type: "post",
+                data: {'dynamic_id': dynamic_id, 'amount': amount, 'subject': 'test'},
+                dataType: "json",
+                success: function (data) {
+                    //var url = "{{ url_for('checkout.gen_order') }}";//需要请求后台跳转页面的链接
+                    //post(url, data);
+                    alert('付款成功');
+                    window.location.href="{{ url_for('checkout.index') }}";
+                },
+                error: function (e) {
+                    alert('付款失败，请重新扫码付款');
+                }
+            });
+        }
+    });
+})
+</script>
+{% endblock %}
