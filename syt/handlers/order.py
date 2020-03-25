@@ -16,9 +16,9 @@ def index():
     return render_template('order/index.html', active='admin', pagination=pagination)
 
 
-@order.route('/refund/<string:sn>/')
-def refund(sn):
-    ret = client.refund(sn=sn)
+@order.route('/refund/<string:sn>/<string:refund_amount>')
+def refund(sn, refund_amount):
+    ret = client.refund(sn=sn, refund_amount=int(float(refund_amount)))
     if ret['result_code'] == '200' and ret['biz_response']['result_code'] == 'REFUND_SUCCESS' and ret['biz_response']['data']['order_status'] == 'REFUNDED':
         order = Order.query.filter_by(sn=sn).first()
         order.order_status = 'REDUNDED'

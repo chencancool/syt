@@ -3,7 +3,6 @@
 {% block title %}收银台{% endblock %}
 
 {% block body %}
-<form>
 <table class="table table-hover" id="product">
     <thead>
     <tr>
@@ -16,14 +15,13 @@
     </tr>
     </thead>
 </table>
- <div id="dg" style="z-index: 9999; position: fixed ! important; right: 20%; bottom: 7em;">
-     <div width="100%" style="position: absolute; width:300px; right: 0px; top: 0px;">
-         <button id="toltal_amount" type="button" class="btn btn-primary btn-lg btn-block" style="width:100%;font-size:40px;">
-             <span>收款：￥</span><span id="amount" name="amount">0.00</span><span>元</span>
-         </button>
-     </div>
-</div>
-</form>
+ <!--<div id="dg" style="z-index: 9999; position: fixed ! important; right: 20%; bottom: 7em;">-->
+     <!--<div width="100%" style="position: absolute; width:300px; right: 0px; top: 0px;">-->
+         <!--<button id="toltal_amount" type="button" class="btn btn-primary btn-lg btn-block" style="width:100%;font-size:40px;">-->
+             <!--<span>收款：￥</span><span id="amount" name="amount">0.00</span><span>元</span>-->
+         <!--</button>-->
+     <!--</div>-->
+<!--</div>-->
 {% endblock %}
 
 {% block footer %}
@@ -42,13 +40,13 @@
     </div>
 </div>
 
-<!--<div id="dg" style="z-index: 9999; position: fixed ! important; right: 20%; bottom: 3%;">-->
-    <!--<table width="100%" style="position: absolute; width:260px; right: 0px; top: 0px;">-->
-        <!--<button id="toltal_amount" type="button" class="btn btn-primary btn-lg btn-block" style="width:100%;font-size:40px;">-->
-            <!--<span>收款：￥</span><span id="amount" name="amount">0.00</span><span>元</span>-->
-        <!--</button>-->
-    <!--</table>-->
-<!--</div>-->
+<div id="dg" style="z-index: 9999; position: fixed ! important; right: 20%; bottom: 3%;">
+    <table width="100%" style="position: absolute; width:260px; right: 0px; top: 0px;">
+        <button id="toltal_amount" type="button" class="btn btn-primary btn-lg btn-block" style="width:100%;font-size:40px;">
+            <span>收款：￥</span><span id="amount" name="amount">0.00</span><span>元</span>
+        </button>
+    </table>
+</div>
 {% endblock %}
 
 {% block scripts %}

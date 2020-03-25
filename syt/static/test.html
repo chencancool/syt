@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="vue.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<ul id="example-1">
+		<li v-for="item in items">
+			{{ item.message }}
+		</li>
+	</ul>
+	<ul id="example-2">
+		<li v-for="( item, index) in items">
+			{{ parentMessage }} - {{ index }} - {{ item.message }}
+		</li>
+	</ul>
+	<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+    <script type="text/javascript">
+		var example1 = new Vue({
+			el: '#example-1',
+			data: {
+				items: [
+					{ message: 'Foo'},
+					{ message: 'Bar'}
+				]
+			}
+		})
+		var example2 = new Vue({
+			el: '#example-2',
+			data: {
+			parentMessage: 'Parent',
+				items: [
+					{ message: 'Foo'},
+					{ message: 'Bar'}
+				]
+			}
+		})
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

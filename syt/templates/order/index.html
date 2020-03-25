@@ -29,8 +29,8 @@
         <td>
             <!-- 使用了俩个 Bootstrap 的 icon 代表编辑和删除操作 -->
             <div class="btn-group" role="group">
-                <a href="{{ url_for('order.refund', sn=order.sn) }}" type="button" class="btn btn-default" title＝"退款">
-                    <span class="glyphicon glyphicon-yen" title＝"退款" aria-hidden="true">
+                <a href="{{ url_for('order.refund', sn=order.sn, refund_amount=order.amount) }}" type="button" class="btn btn-default" title="退款">
+                    <span class="glyphicon glyphicon-yen" title="退款" aria-hidden="true">
                     {% if order.status %}
                     退款
                     {% else %}
